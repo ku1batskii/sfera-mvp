@@ -1,61 +1,39 @@
-# Sfera — Prototype
+# sfera-mvp
+Sfera — прототип
+Лёгкий прототип, демонстрирующий карту активности в реальном времени на основе событий, отправленных пользователями.
 
-Lightweight prototype that demonstrates realtime activity map driven by user-submitted events.
+Быстрый запуск (локальный):
 
-Quick start (local):
-
-1. Install dependencies
-
-```bash
+Установка зависимостей
 npm install
-```
-
-2. Run migrations (creates SQLite file)
-
-```bash
+Запустите миграцию (создаст файл SQLite)
 npm run migrate
-```
-
-3. Start server
-
-```bash
+Запуск сервера
 npm run dev
-```
+Откройте карту в браузере:
+http://localhost:3000/pages/map.html
+Примечания:
 
-4. Open the map in your browser:
+Для простоты в этом примере используется SQLite. Для рабочей среды используйте Postgres + PostGIS.
+Авторизация в Telegram — это заготовка: добавьте виджет для входа в Telegram и проверку на стороне сервера, когда будете готовы.
+Сведения об аутентификации
 
-- http://localhost:3000/pages/map.html
+Сервер выдает токены JWT (подписанные с помощью JWT_SECRET) при успешной проверке входа в Telegram.
+Скопируйте .env.example в .env и установите TELEGRAM_BOT_TOKEN и надежный JWT_SECRET.
+Клиент сохраняет токен в localStorage в разделе sfera_token и отправляет его как Authorization: Bearer <token> при публикации событий.
+Настройка клиента (React):
 
-Notes:
-
-- This PoC uses SQLite for simplicity. For production use Postgres + PostGIS.
-- Telegram auth is a placeholder: add Telegram Login widget and server-side verification when ready.
-
-Authentication details
- - Server issues JWT tokens (signed with `JWT_SECRET`) on successful Telegram Login verification.
- - Copy `.env.example` to `.env` and set `TELEGRAM_BOT_TOKEN` and a strong `JWT_SECRET`.
- - Client stores token in `localStorage` under `sfera_token` and sends it as `Authorization: Bearer <token>` when posting events.
-
-
-Client (React) setup:
-
-```bash
 cd src/client
 npm install
 npm run dev
-```
+Настройка входа в Telegram (быстрая):
 
-Telegram Login setup (quick):
-- Create a bot with @BotFather and get the bot token.
-- Add `TELEGRAM_BOT_TOKEN` to `.env` (copy from `.env.example`).
-- The client includes a placeholder for the Telegram widget; edit `src/client/index.html` and set the `data-telegram-login` attribute with your bot username.
+Создайте бота с помощью @BotFather и получите токен бота.
+Добавьте TELEGRAM_BOT_TOKEN в .env (скопируйте из .env.example).
+В клиенте есть заполнитель для виджета Telegram; отредактируйте src/client/index.html и установите для атрибута data-telegram-login имя вашего бота.
+Производство, сборка и обслуживание
 
-Production build and serve
-
-```bash
 # build client and start production server
 npm run build:client
 npm run start:prod
-```
-
-This builds the React app into `src/client/dist` and serves it from Express at `http://localhost:3000/`.
+Это позволяет собрать приложение React в src/client/dist и запустить его с помощью Express по адресу http://localhost:3000/.

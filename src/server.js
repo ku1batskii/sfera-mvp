@@ -11,6 +11,6 @@ const wss = initWSS(server);
 // Make broadcast accessible from routes via app.locals
 expressApp.locals.wss = wss;
 
-server.listen(port, () => {
-  console.log(`Sfera prototype server listening on http://localhost:${port}`);
+server.listen(port, '0.0.0.0', () => {
+  console.log(`Sfera prototype server listening on http://0.0.0.0:${port}`);
 });
