@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Афиша — Sfera</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <header class="tg-header">
+      <div class="tg-header-inner">
+        <h1 class="tg-logo">Афиша</h1>
+        <nav class="tg-actions" aria-label="Действия">
+          <select
+            id="city-filter-top"
+            class="tg-select"
+            aria-label="Фильтр по городу"
+          >
+            <option value="">Все города</option>
+            <option value="moscow">Москва</option>
+            <option value="spb">Санкт‑Петербург</option>
+            <option value="kzn">Казань</option>
+          </select>
+        </nav>
+      </div>
+    </header>
+
+    <main class="tg-main" id="main">
+      <section class="tl-controls" aria-label="Управление лентой">
+        <div class="tl-controls-inner">
+          <label class="sr-only" for="sort-order">Сортировка</label>
+          <select
+            id="sort-order"
+            class="tg-select"
+            aria-label="Сортировка по времени"
+          >
+            <option value="asc">По времени (ближайшие сначала)</option>
+            <option value="desc">По времени (последние сначала)</option>
+          </select>
+          <button id="toggle-group" class="tg-btn tg-btn-ghost">
+            Группировать по дате
+          </button>
+        </div>
+      </section>
+
+      <section class="timeline" id="timeline" aria-live="polite">
+        <!-- Static sample items; JS will sort/filter them using data-time in ISO format -->
+
+        <article
+          class="timeline-item tg-card"
+          data-time="2025-12-25T18:00:00+03:00"
+          data-city="moscow"
+        >
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="tg-card-media">
+              <img src="/src/assets/images/event-3.jpg" alt="Арт‑выставка" />
+            </div>
+            <div class="tg-card-content">
+              <h3 class="tg-card-title">Арт‑выставка города</h3>
+              <time class="tg-card-time">25 декабря, 18:00</time>
+              <p class="tg-card-desc">
+                Новые работы местных художников и живая дискуссия с авторами.
+              </p>
+              <div class="tg-card-actions">
+                <a class="tg-btn tg-btn-primary" href="/event-details.html"
+                  >Подробнее</a
+                >
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="timeline-item tg-card"
+          data-time="2025-12-25T21:00:00+03:00"
+          data-city="moscow"
+        >
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="tg-card-media">
+              <img src="/src/assets/images/event-1.jpg" alt="Ночной концерт" />
+            </div>
+            <div class="tg-card-content">
+              <h3 class="tg-card-title">Ночной концерт</h3>
+              <time class="tg-card-time">25 декабря, 21:00</time>
+              <p class="tg-card-desc">
+                Живая музыка и отличная атмосфера в центре города.
+              </p>
+              <div class="tg-card-actions">
+                <a class="tg-btn tg-btn-primary" href="/event-details.html"
+                  >Подробнее</a
+                >
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="timeline-item tg-card"
+          data-time="2025-12-26T15:00:00+03:00"
+          data-city="spb"
+        >
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <div class="tg-card-media">
+              <img src="/src/assets/images/event-2.jpg" alt="Мастер‑класс" />
+            </div>
+            <div class="tg-card-content">
+              <h3 class="tg-card-title">Мастер‑класс по рисованию</h3>
+              <time class="tg-card-time">26 декабря, 15:00</time>
+              <p class="tg-card-desc">
+                Пошаговый урок для начинающих, материалы включены.
+              </p>
+              <div class="tg-card-actions">
+                <a class="tg-btn tg-btn-primary" href="/event-details.html"
+                  >Подробнее</a
+                >
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/src/app.js" defer></script>
+    <script>
+      let allEvents = [];
+
+      // Load events from API
+      async function loadEvents() {
+        try {
+          const city = document.getElementById("city-filter-top").value;
+          const qs = city ? `?city=${city}` : "";
+          const response = await fetch(`/api/events${qs}`);
+          const events = await response.json();
+          allEvents = events;
+          renderEvents(events);
+        } catch (error) {
+          console.error("Error loading events:", error);
+          document.getElementById("timeline").innerHTML =
+            '<div class="error">Ошибка загрузки событий</div>';
+        }
+      }
+
+      // Render events to the timeline
+      function renderEvents(events) {
+        const timeline = document.getElementById("timeline");
+        timeline.innerHTML = "";
+
+        if (events.length === 0) {
+          timeline.innerHTML =
+            '<div class="no-events">Нет доступных событий</div>';
+          return;
+        }
+
+        events.forEach((event) => {
+          const eventTime = new Date(event.timestamp || event.created_at);
+          const timeString = eventTime.toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          const eventCard = document.createElement("article");
+          eventCard.className = "timeline-item tg-card";
+          eventCard.setAttribute("data-time", eventTime.toISOString());
+          eventCard.setAttribute("data-city", event.city || "");
+
+          // Determine ticket availability display
+          let ticketInfo = "";
+          if (event.ticket_price > 0 || event.available_tickets > 0) {
+            const available =
+              (event.available_tickets || 0) - (event.sold_tickets || 0);
+            ticketInfo = `<div class="ticket-info">
+              <span class="ticket-price">€${event.ticket_price || 0}</span>
+              <span class="ticket-availability">${
+                available > 0 ? `${available} билетов` : "Распродано"
+              }</span>
+            </div>`;
+          }
+
+          eventCard.innerHTML = `
+            <div class="timeline-marker" aria-hidden="true"></div>
+            <div class="timeline-content">
+              <div class="tg-card-media">
+                <img src="/src/assets/images/event-1.jpg" alt="${
+                  event.title || "Событие"
+                }" />
+              </div>
+              <div class="tg-card-content">
+                <h3 class="tg-card-title">${event.title || "Без названия"}</h3>
+                <time class="tg-card-time">${timeString}</time>
+                <p class="tg-card-desc">${
+                  event.description || "Без описания"
+                }</p>
+                ${ticketInfo}
+                <div class="tg-card-actions">
+                  <a class="tg-btn tg-btn-primary" href="/event-details.html?event=${
+                    event.id
+                  }">Подробнее</a>
+                </div>
+              </div>
+            </div>
+          `;
+
+          timeline.appendChild(eventCard);
+        });
+
+        // Re-initialize sorting and filtering after loading events
+        initializeTimelineControls();
+      }
+
+      // Initialize timeline controls (sorting, filtering, grouping)
+      function initializeTimelineControls() {
+        const sortSelect = document.getElementById("sort-order");
+        const citySelect = document.getElementById("city-filter-top");
+        const toggleGroup = document.getElementById("toggle-group");
+
+        function getItems() {
+          return Array.from(document.querySelectorAll(".timeline-item"));
+        }
+
+        function sortItems(order = "asc") {
+          const items = getItems();
+          items.sort((a, b) => {
+            const ta = new Date(a.dataset.time).getTime();
+            const tb = new Date(b.dataset.time).getTime();
+            return order === "asc" ? ta - tb : tb - ta;
+          });
+          items.forEach((it) =>
+            document.getElementById("timeline").appendChild(it)
+          );
+        }
+
+        function filterByCity(city) {
+          const items = getItems();
+          items.forEach((it) => {
+            if (!city || it.dataset.city === city) {
+              it.style.display = "";
+            } else {
+              it.style.display = "none";
+            }
+          });
+        }
+
+        // Event listeners
+        if (sortSelect) {
+          sortSelect.addEventListener("change", () =>
+            sortItems(sortSelect.value)
+          );
+        }
+
+        if (citySelect) {
+          citySelect.addEventListener("change", () => {
+            loadEvents(); // Reload events with city filter
+          });
+        }
+
+        if (toggleGroup) {
+          let grouped = false;
+          toggleGroup.addEventListener("click", () => {
+            grouped = !grouped;
+            if (grouped) {
+              groupByDate();
+            } else {
+              ungroup();
+            }
+            toggleGroup.textContent = grouped
+              ? "Разгруппировать"
+              : "Группировать по дате";
+          });
+        }
+
+        function groupByDate() {
+          const items = getItems().filter((i) => i.style.display !== "none");
+          const groups = {};
+          items.forEach((it) => {
+            const d = new Date(it.dataset.time);
+            const key = d.toISOString().slice(0, 10);
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(it);
+          });
+
+          const timeline = document.getElementById("timeline");
+          timeline.innerHTML = "";
+          Object.keys(groups)
+            .sort()
+            .forEach((key) => {
+              const hdr = document.createElement("div");
+              hdr.className = "timeline-date";
+              hdr.textContent = new Date(key).toLocaleDateString("ru-RU");
+              timeline.appendChild(hdr);
+              groups[key].forEach((it) => timeline.appendChild(it));
+            });
+        }
+
+        function ungroup() {
+          sortItems(sortSelect ? sortSelect.value : "asc");
+        }
+
+        // Initial sort
+        sortItems(sortSelect ? sortSelect.value : "asc");
+      }
+
+      // Load events when page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        loadEvents();
+      });
+    </script>
+  </body>
+</html>

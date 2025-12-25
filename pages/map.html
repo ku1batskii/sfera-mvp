@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Карта событий</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script>
+      const map = L.map("map").setView([38.3452, -0.481], 13); // Alicante
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Heat layer setup
+      const heatPoints = [];
+      const heat = L.heatLayer(heatPoints, {
+        radius: 25,
+        blur: 18,
+        maxZoom: 17,
+      }).addTo(map);
+
+      // Simple WebSocket client to receive new events
+      const protocol = location.protocol === "https:" ? "wss" : "ws";
+      const ws = new WebSocket(protocol + "://" + location.hostname + ":3000");
+      ws.addEventListener("open", () => console.log("WS connected"));
+      ws.addEventListener("message", (ev) => {
+        try {
+          const msg = JSON.parse(ev.data);
+          if (
+            msg.type === "new_event" &&
+            msg.data &&
+            msg.data.lat &&
+            msg.data.lon
+          ) {
+            const lat = Number(msg.data.lat);
+            const lon = Number(msg.data.lon);
+            heatPoints.push([lat, lon, 0.6]);
+            heat.setLatLngs(heatPoints);
+            // add a small marker popup for context
+            L.circleMarker([lat, lon], { radius: 6, color: "#ff5b5b" })
+              .addTo(map)
+              .bindPopup(msg.data.title || "Событие");
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      // Load initial events from API
+      fetch("/api/events")
+        .then((r) => r.json())
+        .then((list) => {
+          list.forEach((it) => {
+            heatPoints.push([it.lat, it.lon, 0.6]);
+          });
+          heat.setLatLngs(heatPoints);
+        })
+        .catch(() => {});
+    </script>
+  </body>
+</html>

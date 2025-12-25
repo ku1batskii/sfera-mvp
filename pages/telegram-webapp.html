@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no"
+    />
+    <meta name="theme-color" content="#007bff" />
+    <title>Sfera — Социальная активность Alicante</title>
+
+    <!-- Telegram Web App Meta Tags -->
+    <meta
+      property="og:title"
+      content="Sfera — Социальная активность Alicante"
+    />
+    <meta
+      property="og:description"
+      content="Интерактивная карта событий и встреч в Аликанте"
+    />
+    <meta property="og:image" content="https://sfera-app.com/og-image.jpg" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f7f8fb;
+        color: #111;
+        overflow-x: hidden;
+      }
+
+      #app {
+        min-height: 100vh;
+        background: #f7f8fb;
+      }
+
+      .loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e3e9ef;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        color: #6b7280;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .loading-subtitle {
+        color: #9ca3af;
+        font-size: 14px;
+      }
+
+      .error-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        text-align: center;
+        background: #fef2f2;
+        color: #dc2626;
+      }
+
+      .retry-btn {
+        margin-top: 16px;
+        padding: 12px 24px;
+        background: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      /* Telegram Web App specific styles */
+      @media (max-width: 768px) {
+        body {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Загрузка Sfera...</div>
+        <div class="loading-subtitle">Подключение к серверу</div>
+      </div>
+    </div>
+
+    <script>
+      // Telegram Web App initialization
+      const tg =
+        window.Telegram && window.Telegram.WebApp
+          ? window.Telegram.WebApp
+          : null;
+
+      if (tg) {
+        // Configure Telegram Web App
+        tg.expand(); // Expand to full height
+        tg.enableClosingConfirmation(); // Ask for confirmation before closing
+
+        // Set header color
+        tg.setHeaderColor("#007bff");
+
+        // Handle back button
+        tg.onEvent("backButtonClicked", () => {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            tg.close();
+          }
+        });
+
+        // Show back button initially
+        tg.BackButton.show();
+
+        // Make Telegram Web App data available globally
+        window.SFERA_TELEGRAM_DATA = {
+          user: tg.initDataUnsafe?.user,
+          initData: tg.initData,
+          platform: "telegram_webapp",
+        };
+      }
+
+      // Load the React app
+      function loadApp() {
+        const appContainer = document.getElementById("app");
+
+        // Check if we're running on localhost (development)
+        const isLocalhost =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1" ||
+          window.location.hostname === "";
+
+        if (isLocalhost) {
+          // In development, load from Vite dev server
+          const script = document.createElement("script");
+          script.src = "http://localhost:5173/@vite/client";
+          script.onload = () => {
+            // Load the main app script
+            const mainScript = document.createElement("script");
+            mainScript.src = "http://localhost:5173/src/main.jsx";
+            mainScript.type = "module";
+            document.head.appendChild(mainScript);
+
+            // Replace loading with app container
+            appContainer.innerHTML = '<div id="root"></div>';
+          };
+          script.onerror = () => {
+            showError(
+              "Не удалось подключиться к dev серверу. Убедитесь, что запущен `npm run dev:all`"
+            );
+          };
+          document.head.appendChild(script);
+        } else {
+          // In production, load from Express server
+          fetch("/api/health")
+            .then((response) => {
+              if (response.ok) {
+                // Load the built React app
+                appContainer.innerHTML = '<div id="root"></div>';
+
+                // Load the built scripts
+                const script = document.createElement("script");
+                script.src = "/assets/index.js";
+                script.onload = () => {
+                  console.log("Sfera app loaded successfully");
+                };
+                script.onerror = () => {
+                  showError("Ошибка загрузки приложения");
+                };
+                document.head.appendChild(script);
+              } else {
+                throw new Error("Server not responding");
+              }
+            })
+            .catch((error) => {
+              showError(
+                "Не удалось подключиться к серверу. Проверьте подключение к интернету."
+              );
+            });
+        }
+      }
+
+      function showError(message) {
+        const appContainer = document.getElementById("app");
+        appContainer.innerHTML = `
+          <div class="error-message">
+            <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+            <div style="font-size: 18px; margin-bottom: 8px;">Ошибка загрузки</div>
+            <div style="font-size: 14px; margin-bottom: 16px;">${message}</div>
+            <button class="retry-btn" onclick="window.location.reload()">Повторить</button>
+          </div>
+        `;
+      }
+
+      // Start loading the app
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(loadApp, 500); // Small delay to show loading state
+      });
+
+      // Handle app-specific events for Telegram Web App
+      window.addEventListener("sfera:action", (event) => {
+        const { action, data } = event.detail;
+
+        if (tg && action === "share") {
+          // Share content via Telegram
+          tg.openTelegramLink(
+            `https://t.me/share/url?url=${encodeURIComponent(
+              data.url
+            )}&text=${encodeURIComponent(data.text)}`
+          );
+        } else if (tg && action === "close") {
+          tg.close();
+        }
+      });
+    </script>
+  </body>
+</html>

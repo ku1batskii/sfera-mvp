@@ -1,0 +1,30 @@
+{
+  "name": "sfera-proto",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon --watch src --exec node src/server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm --prefix src/client run dev -- --host 0.0.0.0\"",
+    "bot": "node src/bot.js",
+    "bot:dev": "nodemon --watch src/bot.js --exec node src/bot.js",
+    "migrate": "sqlite3 data/db.sqlite < migrations/001_create_events.sql || true",
+    "build:client": "npm --prefix src/client run build",
+    "start:prod": "npm run build:client && node src/server.js"
+  },
+  "dependencies": {
+    "@turf/turf": "^7.3.1",
+    "better-sqlite3": "^8.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "telegraf": "^4.16.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "nodemon": "^2.0.22"
+  }
+}

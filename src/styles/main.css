@@ -1,0 +1,353 @@
+/* Telegram-style main screen CSS
+   - Light and dark theme using CSS variables
+   - Mobile-first responsive cards with banners
+   - Large buttons with hover animation
+   - Flexible grid for mobile/desktop
+   - Prepared styles for "Посмотреть на карте" button
+*/
+
+:root {
+  --bg: #f7f9fb;
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --text: #0f1724;
+  --accent: #0088cc;
+  --accent-600: #0073b3;
+  --glass: rgba(15, 23, 36, 0.04);
+  --radius: 12px;
+  --shadow: 0 8px 20px rgba(15, 23, 36, 0.08);
+}
+
+.dark {
+  --bg: #0b1020;
+  --surface: #0f1724;
+  --muted: #9aa4b2;
+  --text: #e6eef8;
+  --accent: #1e90ff;
+  --accent-600: #1677d8;
+  --glass: rgba(255, 255, 255, 0.03);
+  --shadow: 0 8px 20px rgba(2, 6, 23, 0.6);
+}
+
+/* Base layout */
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.35;
+}
+
+.tg-header {
+  padding: 14px 16px;
+  background: transparent;
+}
+.tg-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tg-logo {
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--text);
+}
+
+/* Hero */
+.tg-hero {
+  position: relative;
+  margin: 14px 16px 8px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), transparent);
+}
+.tg-hero-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.02);
+}
+.tg-hero-body {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  color: var(--surface);
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.tg-hero-title {
+  font-size: 20px;
+  margin: 0 0 6px;
+  color: #fff;
+  font-weight: 700;
+}
+.tg-hero-sub {
+  margin: 0;
+  color: #f0f6fb;
+  font-size: 14px;
+}
+
+/* Filters (hidden by default, ready for JS toggling) */
+.tg-filters {
+  padding: 10px 16px;
+  max-width: 1100px;
+  margin: 0 auto 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tg-select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 36, 0.06);
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Cards grid (mobile-first) */
+.tg-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 12px 16px;
+  max-width: 1100px;
+  margin: 0 auto 20px;
+}
+.tg-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.18s;
+}
+.tg-card-media img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+.tg-card-content {
+  padding: 12px;
+}
+.tg-card-title {
+  font-size: 16px;
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+.tg-card-time {
+  font-size: 13px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 8px;
+}
+.tg-card-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+.tg-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tg-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.12);
+}
+
+/* Buttons */
+.tg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+}
+.tg-btn-primary {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.tg-btn-primary:hover {
+  transform: translateY(-3px);
+  background: var(--accent-600);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.12);
+}
+.tg-btn-ghost {
+  background: transparent;
+  color: var(--text);
+  padding: 8px;
+}
+
+/* Full-width map button fixed to footer area */
+.tg-footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  padding: 12px 16px;
+}
+.tg-footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.tg-btn-full {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-600));
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.12);
+  transition: transform 0.14s ease;
+}
+.tg-btn-full:hover {
+  transform: translateY(-4px);
+}
+
+/* Map placeholder */
+.tg-map {
+  height: 280px;
+  margin: 0 16px 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--glass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+/* Larger screens: grid columns */
+@media (min-width: 640px) {
+  .tg-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .tg-card-media img {
+    height: 180px;
+  }
+}
+@media (min-width: 1000px) {
+  .tg-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .tg-card-media img {
+    height: 160px;
+  }
+  .tg-hero-img {
+    height: 320px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tg-card,
+  .tg-btn-primary,
+  .tg-btn-full {
+    transition: none;
+  }
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Timeline specific styles */
+.timeline {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.timeline-item {
+  position: relative;
+  padding-left: 22px;
+}
+.timeline-marker {
+  position: absolute;
+  left: 4px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.08);
+}
+.timeline-content {
+  display: block;
+}
+
+@media (min-width: 800px) {
+  .timeline {
+    gap: 16px;
+  }
+  .timeline-item {
+    display: flex;
+    align-items: flex-start;
+    padding-left: 0;
+  }
+  .timeline-marker {
+    left: -8px;
+    top: 22px;
+  }
+  .timeline-item .tg-card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .timeline-item .tg-card-media img {
+    width: 220px;
+    height: 140px;
+    object-fit: cover;
+  }
+  .timeline-item .tg-card-content {
+    padding: 14px;
+  }
+}
+
+/* Grouped date header */
+.timeline-date {
+  font-weight: 700;
+  padding: 8px 16px;
+  color: var(--muted);
+}
+
+/* Utility: screen-reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

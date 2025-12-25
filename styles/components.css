@@ -1,0 +1,122 @@
+/* Telegram-style event cards (mobile-first, responsive) */
+.tg-cards {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  max-width: 900px;
+  margin: 0 auto 32px;
+}
+
+.tg-card {
+  display: block;
+  background: #ffffff;
+  color: inherit;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(21, 30, 40, 0.08);
+  text-decoration: none;
+  transform: translateX(8px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.tg-card-banner img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.tg-card-body {
+  padding: 12px 14px 16px;
+}
+
+.tg-card-title {
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: #0f1720;
+}
+
+.tg-card-desc {
+  font-size: 14px;
+  color: #475569;
+  margin: 0 0 8px;
+}
+
+.tg-card-time {
+  display: inline-block;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.tg-card:active {
+  transform: translateY(1px);
+}
+.tg-card:hover {
+  box-shadow: 0 10px 26px rgba(21, 30, 40, 0.12);
+}
+
+/* Slide-in animation (Telegram-like) */
+@keyframes tg-slide-in {
+  0% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-6px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.tg-cards.tg-animate .tg-card {
+  animation-name: tg-slide-in;
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.tg-cards.tg-animate .tg-card:nth-child(1) {
+  animation-delay: 0ms;
+}
+.tg-cards.tg-animate .tg-card:nth-child(2) {
+  animation-delay: 60ms;
+}
+.tg-cards.tg-animate .tg-card:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+/* Larger screens: two-column grid */
+@media (min-width: 640px) {
+  .tg-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .tg-card-banner img {
+    height: 140px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tg-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .tg-card-banner img {
+    height: 160px;
+  }
+}
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .tg-cards .tg-card {
+    transition: none;
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+}

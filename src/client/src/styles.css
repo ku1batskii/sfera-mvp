@@ -1,0 +1,146 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  font-family: Inter, system-ui, Arial, Helvetica, sans-serif;
+  background: #f4f6f8;
+}
+.leaflet-container {
+  height: 100%;
+}
+
+/* App layout */
+.app-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.app-header {
+  height: 56px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.brand {
+  font-weight: 700;
+}
+.app-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 12px;
+}
+.app-sidebar {
+  padding: 12px;
+  overflow: auto;
+  background: #fff;
+  border-right: 1px solid #eef2f6;
+}
+.app-map {
+  background: #e9eef4;
+}
+
+/* admin panel */
+.admin-panel {
+  display: inline-block;
+  margin-left: 12px;
+}
+.admin-toggle {
+  background: #111;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+}
+.admin-body {
+  margin-top: 8px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+}
+.pending-item {
+  padding: 8px;
+  border-bottom: 1px solid #eef2f6;
+  margin-bottom: 6px;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.filter-select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e3e9ef;
+}
+
+/* Activity list */
+.activity-list h3 {
+  margin: 0 0 8px;
+}
+.activity-card {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #eef2f6;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background: #fff;
+}
+.activity-card:hover {
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.06);
+}
+.activity-media {
+  width: 72px;
+  height: 64px;
+  background: linear-gradient(135deg, #dfe9f3, #ffffff);
+  border-radius: 8px;
+}
+.activity-body {
+  flex: 1;
+}
+.activity-title {
+  margin: 0;
+  font-size: 14px;
+}
+.activity-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+.activity-desc {
+  margin: 6px 0 0;
+  color: #475569;
+  font-size: 13px;
+}
+.muted {
+  color: #9aa4b2;
+  font-size: 13px;
+}
+
+/* report button in map */
+.report-btn {
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.08);
+}
+
+@media (max-width: 800px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+  .app-sidebar {
+    order: 2;
+  }
+  .app-map {
+    order: 1;
+  }
+}

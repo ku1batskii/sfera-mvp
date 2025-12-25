@@ -1,0 +1,25 @@
+document.getElementById('purchaseBtn').addEventListener('click', async () => {
+const quantity = parseInt(document.getElementById('quantity').value); const
+messageEl = document.getElementById('purchaseMessage'); if (!quantity ||
+quantity < 1) { messageEl.innerText = 'Введите корректное количество билетов';
+messageEl.style.color = 'red'; return; } const token =
+localStorage.getItem('sfera_token'); if (!token) { messageEl.innerText =
+'Необходимо авторизоваться для покупки билетов'; messageEl.style.color = 'red';
+return; } try { const response = await fetch(`/api/events/${eventId}/purchase`,
+{ method: 'POST', headers: { 'Content-Type': 'application/json',
+'Authorization': `Bearer ${token}` }, body: JSON.stringify({ quantity }) });
+const result = await response.json(); if (response.ok) { messageEl.innerText =
+`Билеты успешно куплены! Осталось билетов: ${result.remaining_tickets}`;
+messageEl.style.color = 'green'; // Обновляем информацию о билетах loadEvent();
+} else { messageEl.innerText = result.error || 'Ошибка при покупке билетов';
+messageEl.style.color = 'red'; } } catch (error) { console.error('Purchase
+error:', error); messageEl.innerText = 'Ошибка сети при покупке билетов';
+messageEl.style.color = 'red'; } }); ======= // Обработчик покупки билетов -
+перенаправление на checkout
+document.getElementById('purchaseBtn').addEventListener('click', () => { const
+quantity = parseInt(document.getElementById('quantity').value); const messageEl
+= document.getElementById('purchaseMessage'); if (!quantity || quantity < 1) {
+messageEl.innerText = 'Введите корректное количество билетов';
+messageEl.style.color = 'red'; return; } // Перенаправляем на страницу
+оформления заказа window.location.href =
+`checkout.html?event=${eventId}&quantity=${quantity}`; });

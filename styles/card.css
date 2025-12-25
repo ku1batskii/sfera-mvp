@@ -1,0 +1,42 @@
+.tg-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin: 10px 0;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.tg-card:hover {
+  transform: scale(1.02);
+}
+
+.tg-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.tg-card-title {
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.tg-card-desc {
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+.tg-card-time {
+  font-size: 12px;
+  color: gray;
+}
+
+.tg-slide-in {
+  animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sfera — Главный экран</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <header class="tg-header">
+      <div class="tg-header-inner">
+        <h1 class="tg-logo">Sfera</h1>
+        <nav class="tg-actions" aria-label="Действия">
+          <button
+            class="tg-btn tg-btn-ghost"
+            id="open-filters"
+            aria-controls="filters"
+          >
+            Фильтры
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="tg-main">
+      <!-- Hero banner -->
+      <section class="tg-hero" aria-label="Баннер">
+        <img
+          class="tg-hero-img"
+          src="/src/assets/images/hero-banner.jpg"
+          alt="Герой-баннер"
+        />
+        <div class="tg-hero-body">
+          <h2 class="tg-hero-title">Мероприятия рядом с вами</h2>
+          <p class="tg-hero-sub">
+            Выбирайте события, присоединяйтесь и встречайтесь офлайн
+          </p>
+        </div>
+      </section>
+
+      <!-- Filters (markup prepared for future integration) -->
+      <section id="filters" class="tg-filters" aria-hidden="true">
+        <label for="city-filter" class="sr-only">Город</label>
+        <select
+          id="city-filter"
+          class="tg-select"
+          aria-label="Фильтр по городу"
+        >
+          <option value="">Все города</option>
+          <option value="moscow">Москва</option>
+          <option value="spb">Санкт‑Петербург</option>
+          <option value="kzn">Казань</option>
+        </select>
+      </section>
+
+      <!-- Events list (mobile-first, each card contains data attributes for map integration) -->
+      <section class="tg-cards" aria-label="Список событий">
+        <article
+          class="tg-card"
+          data-lat="55.7558"
+          data-lon="37.6176"
+          data-city="moscow"
+        >
+          <div class="tg-card-media">
+            <img src="/src/assets/images/event-1.jpg" alt="Концерт" />
+          </div>
+          <div class="tg-card-content">
+            <h3 class="tg-card-title">Ночной концерт</h3>
+            <p class="tg-card-time">Сегодня, 21:00</p>
+            <p class="tg-card-desc">
+              Живая музыка и отличная атмосфера в центре города.
+            </p>
+            <div class="tg-card-actions">
+              <a class="tg-btn tg-btn-primary" href="/event-details.html"
+                >Подробнее</a
+              >
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="tg-card"
+          data-lat="59.9343"
+          data-lon="30.3351"
+          data-city="spb"
+        >
+          <div class="tg-card-media">
+            <img src="/src/assets/images/event-2.jpg" alt="Мастер-класс" />
+          </div>
+          <div class="tg-card-content">
+            <h3 class="tg-card-title">Мастер‑класс по рисованию</h3>
+            <p class="tg-card-time">Завтра, 15:00</p>
+            <p class="tg-card-desc">
+              Пошаговый урок для начинающих, материалы включены.
+            </p>
+            <div class="tg-card-actions">
+              <a class="tg-btn tg-btn-primary" href="/event-details.html"
+                >Подробнее</a
+              >
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="tg-card"
+          data-lat="55.7887"
+          data-lon="49.1221"
+          data-city="kzn"
+        >
+          <div class="tg-card-media">
+            <img src="/src/assets/images/event-3.jpg" alt="Выставка" />
+          </div>
+          <div class="tg-card-content">
+            <h3 class="tg-card-title">Арт‑выставка города</h3>
+            <p class="tg-card-time">Сегодня, 18:00</p>
+            <p class="tg-card-desc">
+              Новые работы местных художников и живая дискуссия с авторами.
+            </p>
+            <div class="tg-card-actions">
+              <a class="tg-btn tg-btn-primary" href="/event-details.html"
+                >Подробнее</a
+              >
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Map placeholder for future integration -->
+      <section id="map" class="tg-map" aria-label="Карта событий">
+        <!-- Map will be injected here by /src/app.js when integrated -->
+        <div class="tg-map-placeholder">Карта будет отображаться здесь</div>
+      </section>
+    </main>
+
+    <!-- Bottom action: view on map -->
+    <footer class="tg-footer">
+      <div class="tg-footer-inner">
+        <button id="view-on-map" class="tg-btn tg-btn-full">
+          Посмотреть на карте
+        </button>
+      </div>
+    </footer>
+
+    <script src="/src/app.js" defer></script>
+  </body>
+</html>
